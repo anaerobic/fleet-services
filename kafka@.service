@@ -1,0 +1,18 @@
+[Unit]
+Description=Kafka Service
+After=zookeeper@%i.service
+Requires=zookeeper@%i.service
+BindsTo=zookeeper@%i.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill foo-kafka
+ExecStartPre=-/usr/bin/docker rm foo-kafka
+ExecStartPre=/usr/bin/docker run -d -p 9092:9092 -h kafka.lacolhost.com --name foo-kafka --link foo-zk:zookeeper confluent/kafka
+ExecStartPre=/bin/sh -c "echo KAFKA_PORT=$(docker port foo-kafka | awk -F':' '{print $2}') >> /tmp/kafka@%i"
+ExecStart=/usr/bin/docker logs -f foo-kafka
+ExecStop=/usr/bin/docker stop foo-kafka
+
+[X-Fleet]
+Conflicts=kafka@*.service
+MachineOf=zookeeper@%i.service

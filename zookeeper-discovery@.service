@@ -1,0 +1,12 @@
+[Unit]
+Description=Zookeeper Announcer
+BindsTo=zookeeper@%i.service
+After=zookeeper@%i.service
+
+[Service]
+EnvironmentFile=-/tmp/zookeeper@%i
+ExecStart=/bin/sh -c "while true; do etcdctl set /services/zookeeper@%i '{ \"host\": \"%H\", \"port\": ${ZK_PORT}} }' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm /services/zookeeper@%i
+
+[X-Fleet]
+MachineOf=zookeeper@%i.service
