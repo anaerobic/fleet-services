@@ -6,10 +6,10 @@ BindsTo=zookeeper@%i.service
 
 [Service]
 TimeoutStartSec=0
+EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill foo-kafka
 ExecStartPre=-/usr/bin/docker rm foo-kafka
-ExecStartPre=/usr/bin/docker run -d -p 9092:9092 -h kafka.lacolhost.com --name foo-kafka --link foo-zk:zookeeper confluent/kafka
-ExecStartPre=/bin/sh -c "echo KAFKA_PORT=$(docker port foo-kafka | awk -F':' '{print $2}') >> /tmp/kafka@%i"
+ExecStartPre=/usr/bin/docker run -d -p 9092:9092 -h ${COREOS_PUBLIC_IPV4} --name foo-kafka --link foo-zk:zookeeper confluent/kafka
 ExecStart=/usr/bin/docker logs -f foo-kafka
 ExecStop=/usr/bin/docker stop foo-kafka
 

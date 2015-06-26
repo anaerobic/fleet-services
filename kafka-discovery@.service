@@ -4,8 +4,13 @@ BindsTo=kafka@%i.service
 After=kafka@%i.service
 
 [Service]
-EnvironmentFile=-/tmp/kafka@%i
-ExecStart=/bin/sh -c "while true; do etcdctl set /services/kafka@%i '{ \"host\": \"%H\", \"port\": ${KAFKA_PORT}} }' --ttl 60;sleep 45;done"
+EnvironmentFile=-/etc/environment
+ExecStart=/bin/sh -c "\
+	while true; do \
+		etcdctl set /services/kafka/%i/host '${COREOS_PUBLIC_IPV4}'; \
+		etcdctl set /services/kafka/%i/port $(docker port foo-kafka | awk -F':' '{print $2}') --ttl 60; \
+		sleep 45; \
+	done;"
 ExecStop=/usr/bin/etcdctl rm /services/kafka@%i
 
 [X-Fleet]

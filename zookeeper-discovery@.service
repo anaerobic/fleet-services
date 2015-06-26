@@ -4,8 +4,13 @@ BindsTo=zookeeper@%i.service
 After=zookeeper@%i.service
 
 [Service]
-EnvironmentFile=-/tmp/zookeeper@%i
-ExecStart=/bin/sh -c "while true; do etcdctl set /services/zookeeper@%i '{ \"host\": \"%H\", \"port\": ${ZK_PORT}} }' --ttl 60;sleep 45;done"
+EnvironmentFile=-/etc/environment
+ExecStart=/bin/sh -c "\
+	while true; do \
+		etcdctl set /services/zookeeper/%i/host '${COREOS_PUBLIC_IPV4}'; \
+		etcdctl set /services/zookeeper/%i/port $(docker port foo-zk | awk -F':' '{print $2}') --ttl 60; \
+		sleep 45; \
+	done;"
 ExecStop=/usr/bin/etcdctl rm /services/zookeeper@%i
 
 [X-Fleet]

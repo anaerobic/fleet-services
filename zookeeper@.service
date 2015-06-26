@@ -4,11 +4,10 @@ After=docker.service
 
 [Service]
 TimeoutStartSec=0
-EnvironmentFile=-/tmp/zookeeper@%i
+EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill foo-zk
 ExecStartPre=-/usr/bin/docker rm foo-zk
-ExecStartPre=/usr/bin/docker run -d -p 2181:2181 -h zookeeper.lacolhost.com --name foo-zk confluent/zookeeper
-ExecStartPre=/bin/sh -c "echo ZK_PORT=$(docker port foo-zk | awk -F':' '{print $2}') >> /tmp/zookeeper@%i"
+ExecStartPre=/usr/bin/docker run -d -p 2181:2181 -h ${COREOS_PUBLIC_IPV4} --name foo-zk confluent/zookeeper
 ExecStart=/usr/bin/docker logs -f foo-zk
 ExecStop=/usr/bin/docker stop foo-zk
 

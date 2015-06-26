@@ -1,0 +1,15 @@
+[Unit]
+Description=Generate Race Service
+After=kafka@1.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill generate-race 
+ExecStartPre=-/usr/bin/docker kill generate-race-producer
+ExecStartPre=-/usr/bin/docker rm generate-race
+ExecStartPre=-/usr/bin/docker rm generate-race-producer
+ExecStart=/usr/bin/sh -c "docker run -a stdout -i --name generate-race anaerobic/generate-race 5000 3 | docker run -i --name generate-race-producer --net host anaerobic/fsharp-kafka-producer reads http://`etcdctl get /services/kafka/1/host`:`etcdctl get /services/kafka/1/port`"
+ExecStop=/usr/bin/docker stop generate-race
+
+[X-Fleet]
+Conflicts=generate-race@*.service

@@ -1,0 +1,14 @@
+[Unit]
+Description=Bib Checkpoints Service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill bib-checkpoints
+ExecStartPre=-/usr/bin/docker rm bib-checkpoints
+ExecStartPre=/usr/bin/docker run -it --rm --net host --name bib-checkpoints anaerobic/fsharp-kafka-consumer race-checkpoint-checks http://kafka.lacolhost.com:9092
+ExecStart=/usr/bin/docker logs -f bib-checkpoints
+ExecStop=/usr/bin/docker stop bib-checkpoints
+
+[X-Fleet]
+Conflicts=bib-checkpoints@*.service
