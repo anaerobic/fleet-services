@@ -6,7 +6,7 @@ After=docker.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill foo-redis
 ExecStartPre=-/usr/bin/docker rm foo-redis
-ExecStart=/usr/bin/docker run --name foo-redis redis
+ExecStart=/usr/bin/docker run -P --name foo-redis redis
 ExecStop=/usr/bin/docker stop foo-redis
 
 [X-Fleet]

@@ -1,7 +1,12 @@
 [Unit]
 Description=Kafka Announcer
-BindsTo=kafka@%i.service
+
+Requires=etcd.service
+Requires=kafka@%i.service
+
+After=etcd.service
 After=kafka@%i.service
+BindsTo=kafka@%i.service
 
 [Service]
 EnvironmentFile=-/etc/environment

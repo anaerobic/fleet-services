@@ -8,10 +8,18 @@ fleetctl start kafka@1
 
 fleetctl start kafka-discovery@1
 
-#fleetctl start hello-race@1
+#fleetctl start redis@1
 
-fleetctl start generate-race@1
+#fleetctl start redis-discovery@1
 
-fleetctl start consume-reads@1
+fleetctl start hello-race
+
+fleetctl start generate-race
+
+fleetctl start consume-reads
+
+fleetctl start consume-bib-aggregates
+
+fleetctl start consume-checkpoint-checks
 
 fleetctl list-units

@@ -1,10 +1,18 @@
 #!/bin/sh
 
-fleetctl destroy consume-reads@1
+fleetctl destroy consume-checkpoint-checks
 
-fleetctl destroy generate-race@1
+fleetctl destroy consume-bib-aggregates
 
-fleetctl destroy hello-race@1
+fleetctl destroy consume-reads
+
+fleetctl destroy generate-race
+
+fleetctl destroy hello-race
+
+fleetctl destroy redis-discovery@1
+
+fleetctl destroy redis@1
 
 fleetctl destroy kafka-discovery@1
 

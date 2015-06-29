@@ -1,10 +1,18 @@
 #!/bin/sh
 
-fleetctl stop consume-reads@1
+fleetctl stop consume-checkpoint-checks
 
-fleetctl stop generate-race@1
+fleetctl stop consume-bib-aggregates
 
-fleetctl stop hello-race@1
+fleetctl stop consume-reads
+
+fleetctl stop generate-race
+
+fleetctl stop hello-race
+
+fleetctl stop redis-discovery@1
+
+fleetctl stop redis@1
 
 fleetctl stop kafka-discovery@1
 

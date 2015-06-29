@@ -1,7 +1,12 @@
 [Unit]
 Description=Zookeeper Announcer
-BindsTo=zookeeper@%i.service
+
+Requires=etcd.service
+Requires=zookeeper@%i.service
+
+After=etcd.service
 After=zookeeper@%i.service
+BindsTo=zookeeper@%i.service
 
 [Service]
 EnvironmentFile=-/etc/environment

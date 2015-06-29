@@ -1,0 +1,18 @@
+[Unit]
+Description=Consume checkpoint-checks Service
+
+Requires=etcd.service
+Requires=docker.service
+
+After=etcd.service
+After=docker.service
+
+[Service]
+Restart=always
+TimeoutStartSec=0
+KillMode=none
+ExecStartPre=-/usr/bin/docker kill consume-checkpoint-checks
+ExecStartPre=-/usr/bin/docker rm consume-checkpoint-checks
+ExecStartPre=/usr/bin/sh -c "docker run -d --net host --name consume-checkpoint-checks anaerobic/fsharp-kafka-consumer race-checkpoint-checks http://`etcdctl get /services/kafka/1/host`:`etcdctl get /services/kafka/1/port`"
+ExecStart=/usr/bin/docker logs -f consume-checkpoint-checks
+ExecStop=/usr/bin/docker stop consume-checkpoint-checks

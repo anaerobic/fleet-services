@@ -1,0 +1,18 @@
+[Unit]
+Description=Consume bib-aggregates Service
+
+Requires=etcd.service
+Requires=docker.service
+
+After=etcd.service
+After=docker.service
+
+[Service]
+Restart=always
+TimeoutStartSec=0
+KillMode=none
+ExecStartPre=-/usr/bin/docker kill consume-bib-aggregates
+ExecStartPre=-/usr/bin/docker rm consume-bib-aggregates
+ExecStartPre=/usr/bin/sh -c "docker run -d --net host --name consume-bib-aggregates anaerobic/fsharp-kafka-consumer race-bib-aggregates http://`etcdctl get /services/kafka/1/host`:`etcdctl get /services/kafka/1/port`"
+ExecStart=/usr/bin/docker logs -f consume-bib-aggregates
+ExecStop=/usr/bin/docker stop consume-bib-aggregates
