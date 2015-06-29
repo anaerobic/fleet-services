@@ -1,12 +1,10 @@
 [Unit]
 Description=Kafka Service
 
-Requires=etcd.service
 Requires=docker.service
 Requires=zookeeper@%i.service
 Requires=kafka-discovery@%i.service
 
-After=etcd.service
 After=docker.service
 After=zookeeper@%i.service
 Before=kafka-discovery@%i.service

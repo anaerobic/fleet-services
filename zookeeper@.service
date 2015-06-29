@@ -1,11 +1,9 @@
 [Unit]
 Description=Zookeeper Service
 
-Requires=etcd.service
 Requires=docker.service
 Requires=zookeeper-discovery@%i.service
 
-After=etcd.service
 After=docker.service
 Before=zookeeper-discovery@%i.service
 
