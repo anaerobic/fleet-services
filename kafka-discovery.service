@@ -1,0 +1,22 @@
+[Unit]
+Description=Kafka Announcer
+
+Requires=etcd.service
+Requires=kafka.service
+
+After=etcd.service
+After=kafka.service
+BindsTo=kafka.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/bin/sh -c "\
+	while true; do \
+		etcdctl set /services/kafka/host '${COREOS_PUBLIC_IPV4}'; \
+		etcdctl set /services/kafka/port $(docker port kafka | awk -F':' '{print $2}') --ttl 60; \
+		sleep 45; \
+	done;"
+ExecStop=/usr/bin/etcdctl rm /services/kafka
+
+[X-Fleet]
+MachineOf=kafka.service

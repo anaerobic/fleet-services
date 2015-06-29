@@ -13,6 +13,6 @@ TimeoutStartSec=0
 KillMode=none
 ExecStartPre=-/usr/bin/docker kill consume-reads
 ExecStartPre=-/usr/bin/docker rm consume-reads
-ExecStartPre=/usr/bin/sh -c "docker run -d --net host --name consume-reads anaerobic/fsharp-kafka-consumer reads http://`etcdctl get /services/kafka/1/host`:`etcdctl get /services/kafka/1/port`"
+ExecStartPre=/usr/bin/sh -c "docker run -d --net host --name consume-reads anaerobic/fsharp-kafka-consumer reads http://`etcdctl get /services/kafka/host`:`etcdctl get /services/kafka/port`"
 ExecStart=/usr/bin/docker logs -f consume-reads
 ExecStop=/usr/bin/docker stop consume-reads

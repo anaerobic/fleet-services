@@ -1,0 +1,21 @@
+[Unit]
+Description=Zookeeper Service
+
+Requires=docker.service
+Requires=zookeeper-discovery.service
+
+After=docker.service
+Before=zookeeper-discovery.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+EnvironmentFile=-/etc/environment
+ExecStartPre=-/usr/bin/docker kill zookeeper
+ExecStartPre=-/usr/bin/docker rm zookeeper
+ExecStartPre=/usr/bin/docker run -d -p 2181:2181 -h ${COREOS_PUBLIC_IPV4} --name zookeeper confluent/zookeeper
+ExecStart=/usr/bin/docker logs -f zookeeper
+ExecStop=/usr/bin/docker stop zookeeper
+
+[X-Fleet]
+Conflicts=zookeeper.service

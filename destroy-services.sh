@@ -10,16 +10,12 @@ fleetctl destroy generate-race
 
 fleetctl destroy hello-race
 
-fleetctl destroy redis-discovery@1
+fleetctl destroy kafka-discovery
 
-fleetctl destroy redis@1
+fleetctl destroy kafka
 
-fleetctl destroy kafka-discovery@1
+fleetctl destroy zookeeper-discovery
 
-fleetctl destroy kafka@1
-
-fleetctl destroy zookeeper-discovery@1
-
-fleetctl destroy zookeeper@1
+fleetctl destroy zookeeper
 
 fleetctl list-units

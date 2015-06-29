@@ -10,4 +10,4 @@ ExecStart=/usr/bin/docker run -P --name foo-redis redis
 ExecStop=/usr/bin/docker stop foo-redis
 
 [X-Fleet]
-Conflicts=redis@*.service
+Conflicts=redis.service

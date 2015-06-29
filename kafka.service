@@ -1,0 +1,24 @@
+[Unit]
+Description=Kafka Service
+
+Requires=docker.service
+Requires=zookeeper.service
+Requires=kafka-discovery.service
+
+After=docker.service
+After=zookeeper.service
+Before=kafka-discovery.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+EnvironmentFile=-/etc/environment
+ExecStartPre=-/usr/bin/docker kill kafka
+ExecStartPre=-/usr/bin/docker rm kafka
+ExecStartPre=/usr/bin/docker run -d -p 9092:9092 -h ${COREOS_PUBLIC_IPV4} --name kafka --link zookeeper:zookeeper confluent/kafka
+ExecStart=/usr/bin/docker logs -f kafka
+ExecStop=/usr/bin/docker stop kafka
+
+[X-Fleet]
+Conflicts=kafka@*.service
+MachineOf=zookeeper.service

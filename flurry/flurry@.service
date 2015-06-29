@@ -2,7 +2,7 @@
 Description=Flurry Service
 
 After=docker.service
-Require=docker.service
+Requires=docker.service
 
 [Service]
 TimeoutStartSec=0

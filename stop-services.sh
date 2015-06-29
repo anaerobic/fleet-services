@@ -10,16 +10,16 @@ fleetctl stop generate-race
 
 fleetctl stop hello-race
 
-fleetctl stop redis-discovery@1
+fleetctl stop redis-discovery
 
-fleetctl stop redis@1
+fleetctl stop redis
 
-fleetctl stop kafka-discovery@1
+fleetctl stop kafka-discovery
 
-fleetctl stop kafka@1
+fleetctl stop kafka
 
-fleetctl stop zookeeper-discovery@1
+fleetctl stop zookeeper-discovery
 
-fleetctl stop zookeeper@1
+fleetctl stop zookeeper
 
 fleetctl list-units

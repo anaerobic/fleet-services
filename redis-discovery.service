@@ -1,0 +1,22 @@
+[Unit]
+Description=Redis Announcer
+
+Requires=etcd.service
+Requires=redis.service
+
+After=etcd.service
+After=redis.service
+BindsTo=redis.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/bin/sh -c "\
+	while true; do \
+		etcdctl set /services/redis/host '${COREOS_PUBLIC_IPV4}'; \
+		etcdctl set /services/redis/port $(docker port foo-redis | awk -F':' '{print $2}') --ttl 60; \
+		sleep 45; \
+	done;"
+ExecStop=/usr/bin/etcdctl rm /services/redis
+
+[X-Fleet]
+MachineOf=redis.service
