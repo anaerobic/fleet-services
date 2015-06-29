@@ -1,0 +1,15 @@
+[Unit]
+Description=Flurry Service
+
+Requires=docker.service
+
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+ExecStartPre=-/usr/bin/docker kill flurry-example
+ExecStartPre=-/usr/bin/docker rm flurry-example
+ExecStart=/usr/bin/docker run --name flurry-example cannanieltf/flurry-example
+ExecStop=/usr/bin/docker stop flurry-example
+
