@@ -24,7 +24,7 @@ Spin up your cluster using the instructions in the root README plz kthxbai welco
 * in a separate tab, navigate to http://172.17.8.102/images/small to be redirected to the keycloak "you did something dumb, so we're sorry... pause not" page
 * open up Postman and build a new GET request to http://172.17.8.102/images/small with an Authorization header with a value of ```Bearer foo```
 * Send the request and feel the shame of being 401 Unauthorized from the party
-* Build a new POST request to your Keycloak server at /auth/realms/demo/protocol/openid-connect/token with an x-www-form-url-encoded Body like ```username=foobar&password=derp12&client_id=foo-http&grant_type=password&client_secret=847fa938-6f82-474f-9241-4930962d2375```
+* Build a new POST request to your Keycloak server at /auth/realms/demo/protocol/openid-connect/token with an x-www-form-url-encoded Body like ```username=trogdor&password=fhqwhgads&client_id=foo-http&grant_type=password&client_secret=847fa938-6f82-474f-9241-4930962d2375```
 * copy the access_token value, go back to your GET request and update the Authorization header value like ```Bearer eyJhbGc...```
 * Send your request and enjoy your chocolate
 
