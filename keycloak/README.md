@@ -13,11 +13,11 @@ Spin up your cluster using the instructions in the root README plz kthxbai welco
 * grab your foo-http client's secret from the Credentials tab and paste it into config/proxy.json
 * from your terminal, run ```fleetctl stop proxy-to-foo-http && fleetctl start proxy-to-foo-http``` to restart the proxy with the new configuration values
   Pro Tip: ```docker exec -it proxy-to-foo-http bash``` into the running container from its host machine and ```cat proxy.json``` to inspect the new configuration file
+* back in the admin console, create a user ```trogdor``` and turn on Email Verified, reset their password to ```fhqwhgads``` then assign them to the user role from the Role Mappings tab
 
 ### Using implicit client flow
 * in a separate tab, navigate to http://172.17.8.102/images/small to be redirected to the keycloak login page
-* back in the admin console, create a user ```trogdor``` and turn on Email Verified, reset their password to ```fhqwhgads``` then assign them to the user role from the Role Mappings tab
-* jump back to the login page, log in with that user and enjoy your chocolate
+* log in as trogdor and enjoy your chocolate
 
 ### Using Direct Access Grants
 * from the admin console, turn on Direct Grants Only and set the Access Type to confidential
