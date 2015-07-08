@@ -1,0 +1,32 @@
+{
+    "target-url": "${target-url}",
+    "send-access-token": true,
+    "bind-address": "${host-ip}",
+    "http-port": "8080",
+    "applications": [
+        {
+            "base-path": "/",
+            "error-page": "/error.html",
+            "adapter-config": {
+                "realm": "demo",
+                "resource": "foo-http",
+                "realm-public-key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCrVrCuTtArbgaZzL1hvh0xtL5mc7o0NqPVnYXkLvgcwiC3BjLGw1tGEGoJaXDuSaRllobm53JBhjx33UNv+5z/UMG4kytBWxheNVKnL6GgqlNabMaFfPLPCF8kAgKnsi79NMo+n6KnSY8YeUmec/p2vjO2NjsSAVcWEQMVhJ31LwIDAQAB",
+                "auth-server-url": "http://${auth-server-ip}:${auth-server-port}/auth",
+                "ssl-required" : "none",
+                "principal-attribute": "name",
+                "credentials": {
+                    "secret": "3de74b6a-339c-4426-98e8-75c0b5d6913e"
+                }
+            }
+            ,
+            "constraints": [
+                {
+                    "pattern": "/images/*",
+                    "roles-allowed": [
+                        "user"
+                    ]
+                }
+            ]
+        }
+    ]
+}
