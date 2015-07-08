@@ -1,0 +1,21 @@
+[Unit]
+Description=JBoss Keycloak Service
+
+Requires=docker.service network-online.target
+Requires=keycloak-discovery.service
+
+After=docker.service network-online.target
+Before=keycloak-discovery.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+EnvironmentFile=-/etc/environment
+  ExecStartPre=-/usr/bin/docker kill keycloak
+ExecStartPre=-/usr/bin/docker rm keycloak
+ExecStartPre=/usr/bin/docker run -d -p 8080:8080 -p 9090:9090 --name keycloak jboss/keycloak-examples
+ExecStart=/usr/bin/docker logs -f keycloak
+ExecStop=/usr/bin/docker stop keycloak
+
+[X-Fleet]
+Conflicts=keycloak.service

@@ -1,5 +1,5 @@
 [Unit]
-Description=Consume bib-aggregates Service
+Description=Consume Bib Aggregates Service
 
 Requires=etcd.service
 Requires=docker.service
