@@ -15,7 +15,7 @@
                 "ssl-required" : "none",
                 "principal-attribute": "name",
                 "credentials": {
-                    "secret": "3de74b6a-339c-4426-98e8-75c0b5d6913e"
+                    "secret": "847fa938-6f82-474f-9241-4930962d2375"
                 }
             }
             ,
