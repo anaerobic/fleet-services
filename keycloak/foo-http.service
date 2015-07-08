@@ -1,0 +1,14 @@
+[Unit]
+Description=Foo HTTP Service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill foo-http
+ExecStartPre=-/usr/bin/docker rm foo-http
+ExecStart=/usr/bin/docker run -P --name foo-http anaerobic/image-twitter-server
+ExecStop=/usr/bin/docker stop foo-http
+
+[X-Fleet]
+Conflicts=keycloak.service
+Conflicts=foo-http.service

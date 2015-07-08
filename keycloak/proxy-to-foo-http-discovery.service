@@ -1,0 +1,22 @@
+[Unit]
+Description=Foo HTTP Announcer
+
+Requires=etcd.service
+Requires=proxy-to-foo-http.service
+
+After=etcd.service
+After=proxy-to-foo-http.service
+BindsTo=proxy-to-foo-http.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/bin/sh -c "\
+	while true; do \
+		etcdctl set /services/proxy-to-foo-http/host '${COREOS_PUBLIC_IPV4}'; \
+		etcdctl set /services/proxy-to-foo-http/port $(docker port proxy-to-foo-http | awk -F':' '{print $2}') --ttl 60; \
+		sleep 45; \
+	done;"
+ExecStop=/usr/bin/etcdctl rm /services/proxy-to-foo-http
+
+[X-Fleet]
+MachineOf=proxy-to-foo-http.service

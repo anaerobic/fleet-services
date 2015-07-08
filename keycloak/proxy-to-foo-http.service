@@ -1,0 +1,25 @@
+[Unit]
+Description=JBoss Keycloak Proxy to Foo Service
+
+Requires=docker.service
+Requires=keycloak.service
+Requires=proxy-to-foo-http-discovery.service
+
+After=docker.service
+Requires=keycloak.service
+Before=proxy-to-foo-http-discovery.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+EnvironmentFile=-/etc/environment
+  ExecStartPre=-/usr/bin/docker kill proxy-to-foo-http
+ExecStartPre=-/usr/bin/docker rm proxy-to-foo-http
+ExecStartPre=/usr/bin/sh -c "docker run--name proxy-to-foo-http -d -p 8080:8080 -h ${COREOS_PUBLIC_IPV4} -e TARGET_URL=http://$(etcdctl get /services/foo-http/host):$(etcdctl get /services/foo-http/port) -e HOST_IP=${COREOS_PUBLIC_IPV4} -e AUTH_SERVER_IP=$(etcdctl get /services/keycloak/host) -e AUTH_SERVER_PORT=$(etcdctl get /services/keycloak/port) anaerobic/keycloak-proxy
+ExecStart=/usr/bin/docker logs -f proxy-to-foo-http
+ExecStop=/usr/bin/docker stop proxy-to-foo-http
+
+[X-Fleet]
+MachineOf=foo-http.service
+Conflicts=keycloak.service
+Conflicts=proxy-to-foo-http.service
