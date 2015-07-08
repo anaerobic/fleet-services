@@ -1,5 +1,5 @@
 [Unit]
-Description=Foo HTTP Announcer
+Description==Proxy to Foo HTTP Announcer
 
 Requires=etcd.service
 Requires=proxy-to-foo-http.service

@@ -11,9 +11,9 @@ Before=keycloak-discovery.service
 TimeoutStartSec=0
 KillMode=none
 EnvironmentFile=-/etc/environment
-  ExecStartPre=-/usr/bin/docker kill keycloak
+ExecStartPre=-/usr/bin/docker kill keycloak
 ExecStartPre=-/usr/bin/docker rm keycloak
-ExecStartPre=/usr/bin/docker run -d -p 8080:8080 -p 9990:9990 -h ${COREOS_PUBLIC_IPV4} --name keycloak jboss/keycloak-examples
+ExecStartPre=/usr/bin/docker run -d -p 8080:8080 -h ${COREOS_PUBLIC_IPV4} --name keycloak jboss/keycloak-examples
 ExecStart=/usr/bin/docker logs -f keycloak
 ExecStop=/usr/bin/docker stop keycloak
 
