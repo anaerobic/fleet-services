@@ -9,14 +9,23 @@ Spin up your cluster using the instructions in the root README plz kthxbai welco
 * log into your Keycloak instance at /auth/admin with admin / admin
 * grab your demo realm's public key from the Settings -> Keys tab and paste it into config/proxy.json
 * create a new client with foo-http as the Client ID and Name, and use the IP of the machine running your proxy for the Valid Redirect URI ie. http://172.17.8.102/*
+* verify from the admin console that your foo-http client has a Valid Redirect URI and Base URL pointing to the proxy!
 * grab your foo-http client's secret from the Credentials tab and paste it into config/proxy.json
 * from your terminal, run ```fleetctl stop proxy-to-foo-http && fleetctl start proxy-to-foo-http``` to restart the proxy with the new configuration values
   Pro Tip: ```docker exec -it proxy-to-foo-http bash``` into the running container from its host machine and ```cat proxy.json``` to inspect the new configuration file
 
 ### Using implicit client flow
-* verify from the admin console that your foo-http client has a Valid Redirect URI and Base URL pointing to the right URL
 * in a separate tab, navigate to http://172.17.8.102/images/small to be redirected to the keycloak login page
 * back in the admin console, create a user ```trogdor``` and turn on Email Verified, reset their password to ```fhqwhgads``` then assign them to the user role from the Role Mappings tab
 * jump back to the login page, log in with that user and enjoy your chocolate
+
+### Using Direct Access Grants
+* from the admin console, turn on Direct Grants Only and set the Access Type to confidential
+* in a separate tab, navigate to http://172.17.8.102/images/small to be redirected to the keycloak "you did something dumb, so we're sorry... pause not" page
+* open up Postman and build a new GET request to http://172.17.8.102/images/small with an Authorization header with a value of ```Bearer foo```
+* Send the request and feel the shame of being 401 Unauthorized from the party
+* Build a new POST request to your Keycloak server at /auth/realms/demo/protocol/openid-connect/token with an x-www-form-url-encoded Body like ```username=foobar&password=derp12&client_id=foo-http&grant_type=password&client_secret=847fa938-6f82-474f-9241-4930962d2375```
+* copy the access_token value, go back to your GET request and update the Authorization header value like ```Bearer eyJhbGc...```
+* Send your request and enjoy your chocolate
 
 ᕕ( ᐛ )ᕗ
