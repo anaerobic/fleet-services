@@ -28,4 +28,7 @@ Spin up your cluster using the instructions in the root README plz kthxbai welco
 * send the request and copy the access_token value from the response Body, go back to your GET request and update the Authorization header value like ```Bearer eyJhbGc...```
 * send your request and enjoy your chocolate
 
+### Discovering Keycloak Endpoints
+* Navigate to /auth/realms/demo/.well-known/openid-configuration
+
 ᕕ( ᐛ )ᕗ
