@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/usr/share/tsung/tsung-1.0.dtd">
+<tsung loglevel="notice" version="1.0">
+
+  <!-- http://tsung.erlang-projects.org/user_manual/index.html -->
+  <!-- Client side setup -->
+  <clients>
+    <client host="localhost" use_controller_vm="true"/>
+  </clients>
+
+  <!-- Server side setup -->
+  <!-- Be sure to configure before running -->
+<servers>
+  <server host="172.17.8.102" port="80" type="tcp"></server>
+</servers>
+
+  <!-- to start os monitoring (cpu, network, memory). Use an erlang
+  agent on the remote machine or SNMP. erlang is the default -->
+ <!--
+  <monitoring>
+    <monitor host="myserver" type="snmp"></monitor>
+  </monitoring>
+  -->
+  <load>
+  <!-- several arrival phases can be set: for each phase, you can set
+  the mean inter-arrival time between new clients and the phase
+  duration -->
+   <arrivalphase phase="1" duration="10" unit="minute">
+     <users interarrival="2" unit="second"></users>
+   </arrivalphase>
+  </load>
+
+  <options>
+   <option type="ts_http" name="user_agent">
+    <user_agent probability="100">Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.7.8) Gecko/20050513 Galeon/1.3.21</user_agent>
+   </option>
+  </options>
+
+  <!-- start a session for a http user. the probability is the
+  frequency of this type os session. The sum of all session's
+  probabilities must be 100 -->
+
+ <sessions>
+  <session name="http-example" probability="100" type="ts_http">
+
+    <!-- full url with server name, this overrides the "server" config value -->
+
+    <!--<request> <http url="/" method="GET" version="1.1"></http> </request>-->
+    <request> <http url="/images/xsmall" method="GET" version="1.1">
+    	<http_header name="Authorization" value="Bearer eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJhMmNlYWQ4OC0yYWFmLTQ5NmYtYWVhZS1jMmM3YjdkYzM1MDIiLCJleHAiOjE0MzY0MDk4MjYsIm5iZiI6MCwiaWF0IjoxNDM2NDA2MjI2LCJpc3MiOiJodHRwOi8vMTcyLjE3LjguMTAxOjgwODAvYXV0aC9yZWFsbXMvZGVtbyIsImF1ZCI6ImZvby1odHRwIiwic3ViIjoiOGM2OWY0ZTAtMzI4ZS00ZTQ3LThiZWYtZTNjZmUzNTI3YWQ3IiwiYXpwIjoiZm9vLWh0dHAiLCJzZXNzaW9uX3N0YXRlIjoiNjU4N2ExYmYtMDcwMS00ZDdlLTg4YjUtM2IxMmE1NzE4NzIwIiwiY2xpZW50X3Nlc3Npb24iOiI1ZDY2NTA3Ni1hZDgxLTRlZDktYjliNC02MDliODM1Y2FiYTciLCJhbGxvd2VkLW9yaWdpbnMiOltdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsidXNlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsidmlldy1wcm9maWxlIiwibWFuYWdlLWFjY291bnQiXX19LCJlbWFpbCI6InRyb2dkb3JAaHMuY29tIiwibmFtZSI6IlRyb2cgRG9yIiwiZmFtaWx5X25hbWUiOiJEb3IiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ0cm9nZG9yIiwiZ2l2ZW5fbmFtZSI6IlRyb2cifQ.mzLp8WFHC6fPT6dHUqPcyef0i38owE2oVX7wid1-21RZq6UOuzWcA6a0uEhKgEbs9Ygpn0fCHdSWmyoRuknRpTDNtuEehwAJi65XtGqRkDWCt22YSxA8CjHLPJpmNdUmzhgSSls0C-8P8PLV_RtVRdalSBPd1OkQqBtKwKz3ZdM" />
+    </http> </request>
+    <request> <http url="/images/small" method="GET" version="1.1">
+    	<http_header name="Authorization" value="Bearer eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJhMmNlYWQ4OC0yYWFmLTQ5NmYtYWVhZS1jMmM3YjdkYzM1MDIiLCJleHAiOjE0MzY0MDk4MjYsIm5iZiI6MCwiaWF0IjoxNDM2NDA2MjI2LCJpc3MiOiJodHRwOi8vMTcyLjE3LjguMTAxOjgwODAvYXV0aC9yZWFsbXMvZGVtbyIsImF1ZCI6ImZvby1odHRwIiwic3ViIjoiOGM2OWY0ZTAtMzI4ZS00ZTQ3LThiZWYtZTNjZmUzNTI3YWQ3IiwiYXpwIjoiZm9vLWh0dHAiLCJzZXNzaW9uX3N0YXRlIjoiNjU4N2ExYmYtMDcwMS00ZDdlLTg4YjUtM2IxMmE1NzE4NzIwIiwiY2xpZW50X3Nlc3Npb24iOiI1ZDY2NTA3Ni1hZDgxLTRlZDktYjliNC02MDliODM1Y2FiYTciLCJhbGxvd2VkLW9yaWdpbnMiOltdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsidXNlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsidmlldy1wcm9maWxlIiwibWFuYWdlLWFjY291bnQiXX19LCJlbWFpbCI6InRyb2dkb3JAaHMuY29tIiwibmFtZSI6IlRyb2cgRG9yIiwiZmFtaWx5X25hbWUiOiJEb3IiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ0cm9nZG9yIiwiZ2l2ZW5fbmFtZSI6IlRyb2cifQ.mzLp8WFHC6fPT6dHUqPcyef0i38owE2oVX7wid1-21RZq6UOuzWcA6a0uEhKgEbs9Ygpn0fCHdSWmyoRuknRpTDNtuEehwAJi65XtGqRkDWCt22YSxA8CjHLPJpmNdUmzhgSSls0C-8P8PLV_RtVRdalSBPd1OkQqBtKwKz3ZdM" />
+    </http> </request>
+    <request> <http url="/images/medium" method="GET" version="1.1">
+    	<http_header name="Authorization" value="Bearer eyJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJhMmNlYWQ4OC0yYWFmLTQ5NmYtYWVhZS1jMmM3YjdkYzM1MDIiLCJleHAiOjE0MzY0MDk4MjYsIm5iZiI6MCwiaWF0IjoxNDM2NDA2MjI2LCJpc3MiOiJodHRwOi8vMTcyLjE3LjguMTAxOjgwODAvYXV0aC9yZWFsbXMvZGVtbyIsImF1ZCI6ImZvby1odHRwIiwic3ViIjoiOGM2OWY0ZTAtMzI4ZS00ZTQ3LThiZWYtZTNjZmUzNTI3YWQ3IiwiYXpwIjoiZm9vLWh0dHAiLCJzZXNzaW9uX3N0YXRlIjoiNjU4N2ExYmYtMDcwMS00ZDdlLTg4YjUtM2IxMmE1NzE4NzIwIiwiY2xpZW50X3Nlc3Npb24iOiI1ZDY2NTA3Ni1hZDgxLTRlZDktYjliNC02MDliODM1Y2FiYTciLCJhbGxvd2VkLW9yaWdpbnMiOltdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsidXNlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsidmlldy1wcm9maWxlIiwibWFuYWdlLWFjY291bnQiXX19LCJlbWFpbCI6InRyb2dkb3JAaHMuY29tIiwibmFtZSI6IlRyb2cgRG9yIiwiZmFtaWx5X25hbWUiOiJEb3IiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ0cm9nZG9yIiwiZ2l2ZW5fbmFtZSI6IlRyb2cifQ.mzLp8WFHC6fPT6dHUqPcyef0i38owE2oVX7wid1-21RZq6UOuzWcA6a0uEhKgEbs9Ygpn0fCHdSWmyoRuknRpTDNtuEehwAJi65XtGqRkDWCt22YSxA8CjHLPJpmNdUmzhgSSls0C-8P8PLV_RtVRdalSBPd1OkQqBtKwKz3ZdM" />
+    </http> </request>
+
+    <thinktime value="20" random="true"></thinktime>
+
+  </session>
+ </sessions>
+</tsung>

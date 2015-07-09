@@ -1,0 +1,20 @@
+[Unit]
+Description=Foo HTTP Service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill tsung-master
+ExecStartPre=-/usr/bin/docker rm tsung-master
+ExecStart=/usr/bin/docker run \
+  --name tsung-master \
+   -p 21:22 \
+   -p 4369:4369 \
+   -p 9001-9050:9001-9050 \
+   -v /services/tsung/tests:/usr/local/tsung ddragosd/tsung-docker:latest \
+   -f /usr/local/tsung/proxy-to-foo-http.xml start
+ExecStop=/usr/bin/docker stop tsung-master
+
+[X-Fleet]
+Conflicts=keycloak.service
+Conflicts=tsung-master.service

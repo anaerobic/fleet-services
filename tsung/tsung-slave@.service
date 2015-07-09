@@ -1,0 +1,20 @@
+[Unit]
+Description=Foo HTTP Service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill tsung-slave%i
+ExecStartPre=-/usr/bin/docker rm tsung-slave%i
+ExecStart=/usr/bin/docker run \
+   --name tsung-slave%i \
+   -p 21:22 \
+   -p 4369:4369 \
+   -p 9001-9050:9001-9050 \
+   -e "SLAVE=true" \
+   ddragosd/tsung-docker:latest
+ExecStop=/usr/bin/docker stop tsung-slave%i
+
+[X-Fleet]
+Conflicts=tsung-master.service
+Conflicts=tsung-slave@*.service
