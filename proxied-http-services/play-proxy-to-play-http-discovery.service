@@ -1,0 +1,22 @@
+[Unit]
+Description==Play Proxy to Play HTTP Announcer
+
+Requires=etcd.service
+Requires=play-proxy-to-play-http.service
+
+After=etcd.service
+After=play-proxy-to-play-http.service
+BindsTo=play-proxy-to-play-http.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/bin/sh -c "\
+	while true; do \
+		etcdctl set /services/play-proxy-to-play-http/host '${COREOS_PUBLIC_IPV4}'; \
+		etcdctl set /services/play-proxy-to-play-http/port $(docker port play-proxy-to-play-http | awk -F':' '{print $2}') --ttl 60; \
+		sleep 45; \
+	done;"
+ExecStop=/usr/bin/etcdctl rm /services/play-proxy-to-play-http
+
+[X-Fleet]
+MachineOf=play-proxy-to-play-http.service

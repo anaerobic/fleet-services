@@ -1,0 +1,22 @@
+[Unit]
+Description=Play Proxy to Play HTTP Service
+
+Requires=docker.service
+Requires=play-proxy-to-play-http-discovery.service
+
+After=docker.service
+Before=play-proxy-to-play-http-discovery.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+EnvironmentFile=-/etc/environment
+ExecStartPre=-/usr/bin/docker kill play-proxy-to-play-http
+ExecStartPre=-/usr/bin/docker rm play-proxy-to-play-http
+ExecStartPre=/usr/bin/sh -c "docker run --name play-proxy-to-play-http -d -P -e TARGET_URL=\"http://$(etcdctl get /services/play-http/host):$(etcdctl get /services/play-http/port)\" bsamaripaltf/play-proxy"
+ExecStart=/usr/bin/docker logs -f play-proxy-to-play-http
+ExecStop=/usr/bin/docker stop play-proxy-to-play-http
+
+[X-Fleet]
+MachineOf=play-http.service
+Conflicts=play-proxy-to-play-http.service

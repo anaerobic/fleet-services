@@ -1,0 +1,21 @@
+[Unit]
+Description=Play HTTP Service
+
+Requires=docker.service
+Requires=play-http-discovery.service
+
+After=docker.service
+Before=play-http-discovery.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+EnvironmentFile=-/etc/environment
+ExecStartPre=-/usr/bin/docker kill play-http
+ExecStartPre=-/usr/bin/docker rm play-http
+ExecStartPre=/usr/bin/docker run --name play-http -d -P bsamaripaltf/play-server
+ExecStart=/usr/bin/docker logs -f play-http
+ExecStop=/usr/bin/docker stop play-http
+
+[X-Fleet]
+Conflicts=play-http.service
