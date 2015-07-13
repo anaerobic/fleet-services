@@ -10,12 +10,7 @@ BindsTo=twitter-http.service
 
 [Service]
 EnvironmentFile=-/etc/environment
-ExecStart=/bin/sh -c "\
-	while true; do \
-		etcdctl set /services/twitter-http/host '${COREOS_PUBLIC_IPV4}'; \
-		etcdctl set /services/twitter-http/port $(docker port twitter-http | awk -F':' '{print $2}') --ttl 60; \
-		sleep 45; \
-	done;"
+ExecStart=/services/default-discovery.sh -d twitter-http -e twitter-http -p web=8888/tcp -ip ${COREOS_PUBLIC_IPV4} -h %h
 ExecStop=/usr/bin/etcdctl rm /services/twitter-http
 
 [X-Fleet]

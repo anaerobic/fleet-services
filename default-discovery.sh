@@ -30,7 +30,7 @@ do
 			shift #unknown option
 		;;
 	esac
-do
+done;
 
 echo ${port_list[@]}
 echo $service_name
