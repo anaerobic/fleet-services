@@ -30,7 +30,12 @@ do
 			shift #unknown option
 		;;
 	esac
-done
+do
+
+echo ${port_list[@]}
+echo $service_name
+echo $public_ip
+echo $hostname
 
 while true; do
 	for port in "${port_list[@]}"

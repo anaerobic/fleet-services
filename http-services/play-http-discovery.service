@@ -1,5 +1,5 @@
 [Unit]
-Description==Play HTTP Announcer
+Description=Play HTTP Announcer
 
 Requires=etcd.service
 Requires=play-http.service
@@ -10,12 +10,7 @@ BindsTo=play-http.service
 
 [Service]
 EnvironmentFile=-/etc/environment
-ExecStart=/bin/sh -c "\
-	while true; do \
-		etcdctl set /services/play-http/host '${COREOS_PUBLIC_IPV4}'; \
-		etcdctl set /services/play-http/port $(docker port play-http | awk -F':' '{print $2}') --ttl 60; \
-		sleep 45; \
-	done;"
+ExecStart=/services/default-discovery.sh -d play-http -e play-http -p web=9000/tcp -ip ${COREOS_PUBLIC_IPV4} -h %h
 ExecStop=/usr/bin/etcdctl rm /services/play-http
 
 [X-Fleet]
