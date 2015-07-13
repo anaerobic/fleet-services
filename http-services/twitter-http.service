@@ -6,7 +6,7 @@ After=docker.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill twitter-http
 ExecStartPre=-/usr/bin/docker rm twitter-http
-ExecStart=/usr/bin/docker run -P --name twitter-http anaerob	ic/image-twitter-server
+ExecStart=/usr/bin/docker run -P --name twitter-http anaerobic/image-twitter-server
 ExecStop=/usr/bin/docker stop twitter-http
 
 [X-Fleet]
