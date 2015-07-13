@@ -32,16 +32,11 @@ do
 	esac
 done
 
-echo ${port_list[@]}
-echo $service_name
-echo $public_ip
-echo $hostname
-
 while true; do
 	for port in "${port_list[@]}"
 	do
 		IFS='=' read -a port_info <<< "$port"
-		name=${port_info[0]}
+		$port_name=${port_info[0]}
 		exposed_port=$(docker inspect -f "{{(index (index .NetworkSettings.Ports \"${port_info[1]}\") 0).HostPort}}" $docker_name)
 		ncat ${public_ip} ${exposed_port} < /dev/null
 		if [ $? -eq 0 ]; then
@@ -51,7 +46,7 @@ while true; do
                         fi;
                         etcdctl set /services/${etcd_directory}/host ${hostname} -ttl 30;
                         etcdctl set /services/${etcd_directory}/ip ${public_ip} -ttl 30;
-                        etcdctl set /services/${etcd_directory}/port/${name} ${exposed_port} --ttl 30;
+                        etcdctl set /services/${etcd_directory}/port/${port_name} ${exposed_port} --ttl 30;
                 else
                         etcdctl rm --recursive /services/${etcd_directory};
                 fi;
