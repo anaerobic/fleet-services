@@ -1,0 +1,22 @@
+[Unit]
+Description=Keycloak Proxy to Twitter HTTP Announcer
+
+Requires=etcd.service
+Requires=keycloak-proxy-to-twitter-http.service
+
+After=etcd.service
+After=keycloak-proxy-to-twitter-http.service
+BindsTo=keycloak-proxy-to-twitter-http.service
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/bin/sh -c "\
+	while true; do \
+		etcdctl set /services/keycloak-proxy-to-twitter-http/host '${COREOS_PUBLIC_IPV4}'; \
+		etcdctl set /services/keycloak-proxy-to-twitter-http/port $(docker port keycloak-proxy-to-twitter-http | awk -F':' '{print $2}') --ttl 60; \
+		sleep 45; \
+	done;"
+ExecStop=/usr/bin/etcdctl rm /services/keycloak-proxy-to-twitter-http
+
+[X-Fleet]
+MachineOf=keycloak-proxy-to-twitter-http.service

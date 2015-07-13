@@ -1,0 +1,13 @@
+[Unit]
+Description=Twitter HTTP Service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill twitter-http
+ExecStartPre=-/usr/bin/docker rm twitter-http
+ExecStart=/usr/bin/docker run -p 8080:8888 --name twitter-http anaerobic/image-twitter-server
+ExecStop=/usr/bin/docker stop twitter-http
+
+[X-Fleet]
+Conflicts=twitter-http.service
