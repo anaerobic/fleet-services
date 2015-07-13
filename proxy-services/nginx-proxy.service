@@ -1,4 +1,3 @@
-[Unit]
 Description=Nginx Proxy to Play HTTP Service
 
 Requires=docker.service
@@ -13,7 +12,7 @@ KillMode=none
 EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill nginx-proxy-to-play-http
 ExecStartPre=-/usr/bin/docker rm nginx-proxy-to-play-http
-ExecStartPre=/usr/bin/sh -c "docker run --name nginx-proxy-to-play-http -d -P -e TARGET_URL=\"http://$(etcdctl get /services/play-http/host):$(etcdctl get /services/play-http/port)\" cannanieltf/nginx-simple"
+ExecStartPre=/usr/bin/sh -c "docker run --name nginx-proxy-to-play-http -d -P -e TARGET_URL=\"http://$(etcdctl get /services/play-http/host):$(etcdctl get /services/play-http/port)\" cannanieltf/nginx-sample-proxy"
 ExecStart=/usr/bin/docker logs -f nginx-proxy-to-play-http
 ExecStop=/usr/bin/docker stop nginx-proxy-to-play-http
 

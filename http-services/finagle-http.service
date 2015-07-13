@@ -1,0 +1,20 @@
+[Unit]
+Description=Play HTTP Service
+
+Requires=docker.service
+#Requires=play-http-discovery.service
+
+After=docker.service
+#Before=play-http-discovery.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+EnvironmentFile=-/etc/environment
+ExecStartPre=-/usr/bin/docker kill twitter-server-http
+ExecStartPre=-/usr/bin/docker rm twitter-server-http 
+ExecStartPre=/usr/bin/docker run --name twitter-server-http -P rwilson/twitter-server-backend
+ExecStop=/usr/bin/docker stop twitter-server-http
+
+[X-Fleet]
+Conflicts=play-http.service
