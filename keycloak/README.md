@@ -15,7 +15,7 @@ Spin up your cluster using the instructions in the root README plz kthxbai welco
   Pro Tip: ```docker exec -it keycloak-proxy-to-twitter-http bash``` into the running container from its host machine and ```cat proxy.json``` to inspect the new configuration file
 * back in the admin console, create a user ```trogdor``` and turn on Email Verified, reset their password to ```fhqwhgads``` then assign them to the user role from the Role Mappings tab
 
-### Using implicit client flow
+### Using Implicit Client Flow
 * verify from the admin console that your twitter-http client has a Valid Redirect URI and Base URL pointing to the proxy!
 * grab your twitter-http client's secret from the Credentials tab and paste it into proxied-http-services/config/keycloak-proxy-to-twitter-http/proxy.json
 * in a separate tab, navigate to http://172.17.8.102/images/small to be redirected to the keycloak login page
