@@ -2,9 +2,11 @@
 Description=Play Proxy to Play HTTP Service
 
 Requires=docker.service
+Requires=play-http.service
 Requires=play-proxy-to-play-http-discovery.service
 
 After=docker.service
+After=play-http.service
 Before=play-proxy-to-play-http-discovery.service
 
 [Service]

@@ -2,22 +2,20 @@
 Description=Keycloak Proxy to Twitter HTTP Service
 
 Requires=docker.service
-Requires=keycloak-proxy-to-twitter-http-discovery.service
+Requires=twitter-http.service
 
 After=docker.service
-Before=keycloak-proxy-to-twitter-http-discovery.service
+After=twitter-http.service
 
 [Service]
 TimeoutStartSec=0
 KillMode=none
-EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill keycloak-proxy-to-twitter-http
 ExecStartPre=-/usr/bin/docker rm keycloak-proxy-to-twitter-http
-ExecStartPre=/usr/bin/sh -c "docker run --name keycloak-proxy-to-twitter-http -d -p 80:8080 -v /services/proxied-http-services/config/keycloak-proxy-to-twitter-http:/app/config -e TARGET_URL=\"http://$(etcdctl get /services/twitter-http/host):$(etcdctl get /services/twitter-http/port)\" -e HOST_IP=0.0.0.0 -e AUTH_SERVER_IP=$(etcdctl get /services/keycloak/host) -e AUTH_SERVER_PORT=$(etcdctl get /services/keycloak/port) anaerobic/keycloak-proxy"
+ExecStartPre=/usr/bin/sh -c "docker run --name keycloak-proxy-to-twitter-http -d -p 80:8080 -v /services/proxy-services/config/keycloak-proxy-to-twitter-http:/app/config -e TARGET_URL=\"http://$(etcdctl get /services/twitter-http/host):$(etcdctl get /services/twitter-http/port)\" -e HOST_IP=0.0.0.0 -e AUTH_SERVER_IP=$(etcdctl get /services/keycloak/host) -e AUTH_SERVER_PORT=$(etcdctl get /services/keycloak/port) anaerobic/keycloak-proxy"
 ExecStart=/usr/bin/docker logs -f keycloak-proxy-to-twitter-http
 ExecStop=/usr/bin/docker stop keycloak-proxy-to-twitter-http
 
 [X-Fleet]
 MachineOf=twitter-http.service
-Conflicts=keycloak.service
 Conflicts=keycloak-proxy-to-twitter-http.service

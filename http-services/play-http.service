@@ -7,10 +7,10 @@ After=docker.service
 
 [Service]
 TimeoutStartSec=0
-EnvironmentFile=-/etc/environment
+KillMode=none
 ExecStartPre=-/usr/bin/docker kill play-http
 ExecStartPre=-/usr/bin/docker rm play-http
-ExecStart=/usr/bin/docker run --name play-http -i -P bsamaripaltf/play-server
+ExecStart=/usr/bin/docker run --name play-http -i -p 8080:8080 bsamaripaltf/play-server
 ExecStop=/usr/bin/docker stop play-http
 
 [X-Fleet]

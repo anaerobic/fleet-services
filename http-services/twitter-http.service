@@ -1,12 +1,19 @@
 [Unit]
 Description=Twitter HTTP Service
+
+Requires=docker.service
+Requires=twitter-http-discovery.service
+
 After=docker.service
+Before=twitter-http-discovery.service
 
 [Service]
 TimeoutStartSec=0
+KillMode=none
 ExecStartPre=-/usr/bin/docker kill twitter-http
 ExecStartPre=-/usr/bin/docker rm twitter-http
-ExecStart=/usr/bin/docker run -P --name twitter-http anaerobic/image-twitter-server
+ExecStart=/usr/bin/docker run -d -p 8080:8888 --name twitter-http rwilsonltf/twitter-server-backend
+ExecStart=/usr/bin/docker logs -f twitter-http
 ExecStop=/usr/bin/docker stop twitter-http
 
 [X-Fleet]
