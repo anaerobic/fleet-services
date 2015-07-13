@@ -36,7 +36,8 @@ while true; do
 	for port in "${port_list[@]}"
 	do
 		IFS='=' read -a port_info <<< "$port"
-		$port_name=${port_info[0]}
+		echo ${port_info[@]};
+		port_name=${port_info[0]}
 		exposed_port=$(docker inspect -f "{{(index (index .NetworkSettings.Ports \"${port_info[1]}\") 0).HostPort}}" $docker_name)
 		ncat ${public_ip} ${exposed_port} < /dev/null
 		if [ $? -eq 0 ]; then
