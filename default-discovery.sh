@@ -37,14 +37,18 @@ echo $service_name
 echo $public_ip
 echo $hostname
 
-while true; do
+while : ; do
 	for port in "${port_list[@]}"
 	do
 		IFS='=' read -a port_info <<< "$port"
 		echo ${port_info[@]};
 		port_name=${port_info[0]}
 		exposed_port=$(docker inspect -f "{{(index (index .NetworkSettings.Ports \"${port_info[1]}\") 0).HostPort}}" $docker_name)
-		ncat ${public_ip} ${exposed_port} < /dev/null
+		{ 
+			ncat ${public_ip} ${exposed_port} < /dev/null 
+		} || { 
+			break 2; 
+		}
 		if [ $? -eq 0 ]; then
                         etcdctl mkdir /services/${etcd_directory} -ttl 30;
                         if [ $? -ne 0 ]; then

@@ -11,7 +11,7 @@ BindsTo=twitter-http.service
 [Service]
 EnvironmentFile=-/etc/environment
 ExecStart=/services/default-discovery.sh -d twitter-http -e twitter-http -p web=8888/tcp -ip ${COREOS_PUBLIC_IPV4} -h %h
-ExecStop=/usr/bin/etcdctl rm /services/twitter-http
+ExecStop=-/usr/bin/etcdctl rm /services/twitter-http
 
 [X-Fleet]
 MachineOf=twitter-http.service
