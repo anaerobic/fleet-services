@@ -1,0 +1,23 @@
+[Unit]
+Description=Finagle Proxy to Nginx HTTP Service
+
+Requires=docker.service
+Requires=nginx-http.service
+
+After=docker.service
+After=nginx-http.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+Restart=always
+ExecStartPre=-/usr/bin/docker kill finagle-proxy-to-nginx-http
+ExecStartPre=-/usr/bin/docker rm finagle-proxy-to-nginx-http
+ExecStartPre=-/usr/bin/docker pull localhub.chronotrack.com:5000/rwilson/finagle-proxy
+ExecStartPre=/usr/bin/sh -c "docker run --name finagle-proxy-to-nginx-http -d -p 80:80 -e TARGET_HOST=\"http://$(etcdctl get /services/nginx-http/host):$(etcdctl get /services/nginx-http/port/web)\" localhub.chronotrack.com:5000/rwilson/finagle-proxy"
+ExecStart=/usr/bin/docker logs -f finagle-proxy-to-nginx-http
+ExecStop=/usr/bin/docker stop finagle-proxy-to-nginx-http
+
+[X-Fleet]
+MachineOf=nginx-http.service
+Conflicts=finagle-proxy-to-nginx-http.service
