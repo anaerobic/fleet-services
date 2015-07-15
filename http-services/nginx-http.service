@@ -1,0 +1,19 @@
+[Unit]
+Description=Nginx HTTP Service
+
+Requires=docker.service
+
+After=docker.service
+
+[Service]
+LimitNOFILE=10000
+TimeoutStartSec=0
+KillMode=none
+ExecStartPre=-/usr/bin/docker kill nginx-http
+ExecStartPre=-/usr/bin/docker rm nginx-http
+ExecStartPre=-/usr/bin/docker pull localhub.chronotrack.com:5000/nginx-simple
+ExecStart=/usr/bin/docker run --name nginx-http -i -p 8080:80 localhub.chronotrack.com:5000/nginx-simple
+ExecStop=/usr/bin/docker stop nginx-http
+
+[X-Fleet]
+Conflicts=nginx-http.service

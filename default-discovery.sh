@@ -37,30 +37,33 @@ echo $service_name
 echo $public_ip
 echo $hostname
 
-while : ; do
+sleep 3;
+
+while true; do
 	for port in "${port_list[@]}"
 	do
 		IFS='=' read -a port_info <<< "$port"
 		echo ${port_info[@]};
 		port_name=${port_info[0]}
+		
 		exposed_port=$(docker inspect -f "{{(index (index .NetworkSettings.Ports \"${port_info[1]}\") 0).HostPort}}" $docker_name)
-		{ 
-			ncat ${public_ip} ${exposed_port} < /dev/null 
-		} || { 
-			break 2; 
-		}
+		
+		echo $public_ip $exposed_port
+
+		ncat ${public_ip} ${exposed_port} < /dev/null 
+
 		if [ $? -eq 0 ]; then
-                        etcdctl mkdir /services/${etcd_directory} -ttl 30;
-                        if [ $? -ne 0 ]; then
-                                etcdctl updatedir /services/${etcd_directory} -ttl 30;
-                        fi;
-                        etcdctl set /services/${etcd_directory}/host ${hostname} -ttl 30;
-                        etcdctl set /services/${etcd_directory}/ip ${public_ip} -ttl 30;
-                        etcdctl set /services/${etcd_directory}/port/${port_name} ${exposed_port} --ttl 30;
-                else
-                        etcdctl rm --recursive /services/${etcd_directory};
-                fi;
-                sleep 25; 
+            etcdctl mkdir /services/${etcd_directory} -ttl 30;
+            if [ $? -ne 0 ]; then
+                    etcdctl updatedir /services/${etcd_directory} -ttl 30;
+            fi;
+            etcdctl set /services/${etcd_directory}/host ${hostname} -ttl 30;
+            etcdctl set /services/${etcd_directory}/ip ${public_ip} -ttl 30;
+            etcdctl set /services/${etcd_directory}/port/${port_name} ${exposed_port} --ttl 30;
+        else
+                etcdctl rm --recursive /services/${etcd_directory};
+        fi;
+        sleep 25; 
 	done;
 done;
 		

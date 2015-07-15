@@ -10,7 +10,7 @@ BindsTo=play-http.service
 
 [Service]
 EnvironmentFile=-/etc/environment
-ExecStart=/services/default-discovery.sh -d play-http -e play-http -p web=9000/tcp -ip ${COREOS_PUBLIC_IPV4} -h %h
+ExecStart=/bin/sh -c "/services/default-discovery.sh -d play-http -e play-http -p web=9000/tcp -ip ${COREOS_PUBLIC_IPV4} -h $(ifconfig eth1 | awk '{ print $2}' | grep -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}')"
 ExecStop=/usr/bin/etcdctl rm /services/play-http
 
 [X-Fleet]

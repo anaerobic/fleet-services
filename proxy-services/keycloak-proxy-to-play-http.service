@@ -1,0 +1,23 @@
+[Unit]
+Description=Keycloak Proxy to Play HTTP Service
+
+Requires=docker.service
+Requires=play-http.service
+
+After=docker.service
+After=play-http.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+Restart=always
+ExecStartPre=-/usr/bin/docker kill keycloak-proxy-to-play-http
+ExecStartPre=-/usr/bin/docker rm keycloak-proxy-to-play-http
+ExecStartPre=-/usr/bin/docker pull anaerobic/keycloak-proxy
+ExecStartPre=/usr/bin/sh -c "docker run --name keycloak-proxy-to-play-http -d -p 80:8080 -v /services/proxy-services/config/keycloak-proxy-to-play-http:/app/config -e TARGET_URL=\"http://$(etcdctl watch /services/play-http/host):$(etcdctl watch /services/play-http/port/web)\" -e HOST_IP=0.0.0.0 -e AUTH_SERVER_IP=$(etcdctl watch /services/keycloak/host) -e AUTH_SERVER_PORT=$(etcdctl watch /services/keycloak/port/web) anaerobic/keycloak-proxy"
+ExecStart=/usr/bin/docker logs -f keycloak-proxy-to-play-http
+ExecStop=/usr/bin/docker stop keycloak-proxy-to-play-http
+
+[X-Fleet]
+MachineOf=play-http.service
+Conflicts=keycloak-proxy-to-play-http.service

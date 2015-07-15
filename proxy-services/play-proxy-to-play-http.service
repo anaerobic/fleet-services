@@ -1,24 +1,21 @@
 [Unit]
-Description=Play Proxy to Play HTTP Service
+Description=Play Proxy to Nginx HTTP Service
 
 Requires=docker.service
-Requires=play-http.service
-Requires=play-proxy-to-play-http-discovery.service
+Requires=nginx-http.service
 
 After=docker.service
-After=play-http.service
-Before=play-proxy-to-play-http-discovery.service
+After=nginx-http.service
 
 [Service]
 TimeoutStartSec=0
 KillMode=none
-EnvironmentFile=-/etc/environment
-ExecStartPre=-/usr/bin/docker kill play-proxy-to-play-http
-ExecStartPre=-/usr/bin/docker rm play-proxy-to-play-http
-ExecStartPre=/usr/bin/sh -c "docker run --name play-proxy-to-play-http -d -P -e TARGET_URL=\"http://$(etcdctl get /services/play-http/host):$(etcdctl get /services/play-http/port)\" bsamaripaltf/play-proxy"
-ExecStart=/usr/bin/docker logs -f play-proxy-to-play-http
-ExecStop=/usr/bin/docker stop play-proxy-to-play-http
+ExecStartPre=-/usr/bin/docker kill play-proxy-to-nginx-http
+ExecStartPre=-/usr/bin/docker rm play-proxy-to-nginx-http
+ExecStartPre=/usr/bin/sh -c "docker run --name play-proxy-to-nginx-http -d -p 80:9000 -e TARGET_URL=\"http://$(etcdctl watch /services/nginx-http/host):$(etcdctl watch /services/nginx-http/port)\" bsamaripaltf/play-proxy"
+ExecStart=/usr/bin/docker logs -f play-proxy-to-nginx-http
+ExecStop=/usr/bin/docker stop play-proxy-to-nginx-http
 
 [X-Fleet]
-MachineOf=play-http.service
-Conflicts=play-proxy-to-play-http.service
+MachineOf=nginx-http.service
+Conflicts=play-proxy-to-nginx-http.service

@@ -1,0 +1,23 @@
+[Unit]
+Description=Nginx Proxy to Nginx HTTP Service
+
+Requires=docker.service
+Requires=nginx-http.service
+
+After=docker.service
+After=nginx-http.service
+
+[Service]
+TimeoutStartSec=0
+KillMode=none
+Restart=always
+ExecStartPre=-/usr/bin/docker kill nginx-proxy-to-nginx-http
+ExecStartPre=-/usr/bin/docker rm nginx-proxy-to-nginx-http
+ExecStartPre=-/usr/bin/docker pull localhub.chronotrack.com:5000/cannanie/nginx-proxy
+ExecStartPre=/usr/bin/sh -c "docker run --name nginx-proxy-to-nginx-http -d -p 80:80 -e TARGET_URL=\"http://$(etcdctl get /services/nginx-http/host):$(etcdctl get /services/nginx-http/port/web)\" localhub.chronotrack.com:5000/cannanie/nginx-proxy"
+ExecStart=/usr/bin/docker logs -f nginx-proxy-to-nginx-http
+ExecStop=/usr/bin/docker stop nginx-proxy-to-nginx-http
+
+[X-Fleet]
+MachineOf=nginx-http.service
+Conflicts=nginx-proxy-to-nginx-http.service

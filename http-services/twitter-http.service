@@ -8,12 +8,14 @@ After=docker.service
 Before=twitter-http-discovery.service
 
 [Service]
+LimitNOFILE=10000
 TimeoutStartSec=0
 KillMode=none
 ExecStartPre=-/usr/bin/docker kill twitter-http
 ExecStartPre=-/usr/bin/docker rm twitter-http
 ExecStartPre=-/usr/bin/docker pull rwilsonltf/twitter-server-backend
-ExecStart=/usr/bin/docker run -p 8080:8888 --name twitter-http rwilsonltf/twitter-server-backend
+ExecStartPre=/usr/bin/docker run --name twitter-http -f -p 8080:8888 rwilsonltf/twitter-server-backend
+ExecStart=/usr/bin/docker logs -f twitter-http
 ExecStop=/usr/bin/docker stop twitter-http
 
 [X-Fleet]
